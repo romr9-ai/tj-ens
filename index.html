@@ -1,0 +1,293 @@
+import { useEffect, useState } from "react";
+
+export default function TourVotingSite() {
+  const options = [
+    {
+      id: "playa",
+      title: "Opción A · Día de Playa",
+      subtitle: "Low cost · cero estrés · mood relax",
+      emoji: "🌊",
+      time: "11:00 – 19:00",
+      location: "San Miguel / Playa Hermosa",
+      budget: "$100–300 por persona",
+      vibe: ["Chill", "Barato", "Fácil logística", "Ideal post-show"],
+      pros: [
+        "Menos gasto para todos",
+        "No requiere reservación",
+        "Perfecto para descansar después de tocar",
+        "Buen plan para llevar hielera, snacks y bocina",
+      ],
+      cons: [
+        "Puede haber mucha gente por Semana Santa",
+        "Menos especial que una salida al Valle",
+      ],
+      plan: [
+        "11:00 · Salida del hospedaje",
+        "11:30 · Llegada a playa",
+        "12:00–16:00 · Relax, cheves, snacks y fotos",
+        "17:00 · Regreso",
+        "19:00 · Cena ligera o descanso en casa",
+      ],
+      image:
+        "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80",
+      accent: "from-cyan-500 to-blue-600",
+      note: "La opción más práctica para cuidar energía y presupuesto.",
+    },
+    {
+      id: "valle",
+      title: "Opción B · Valle de Guadalupe",
+      subtitle: "Experiencia · comida rica · vibe memorable",
+      emoji: "🍷",
+      time: "11:00 – 20:00",
+      location: "Finca Altozano / Bar Bura / Deckman’s",
+      budget: "$500–1200 por persona",
+      vibe: ["Más premium", "Fotos chidas", "Comida + vino", "Plan de viaje"],
+      pros: [
+        "Se siente más como mini-vacación",
+        "Muy buena experiencia para grupo y parejas",
+        "Excelente para fotos y pasarla cool",
+        "Plan más memorable que solo quedarse en la ciudad",
+      ],
+      cons: [
+        "Más caro",
+        "Necesita conductor designado",
+        "Puede requerir reserva o paciencia por fechas",
+      ],
+      plan: [
+        "11:00 · Salida del hospedaje",
+        "12:00 · Llegada al Valle",
+        "12:30–17:00 · Comida + vino (Finca Altozano ≈ $400–700, Bar Bura ≈ $700–1200)",
+        "18:30 · Regreso a Ensenada",
+        "20:00 · Noche chill en casa",
+      ],
+      image:
+        "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?auto=format&fit=crop&w=1200&q=80",
+      accent: "from-amber-500 to-rose-600",
+      note: "Ejemplos reales: Finca Altozano (asador campestre), Bar Bura en Cuatro Cuatros (mínimo ≈ $700–1000 por persona), Deckman’s (experiencia similar, con reserva recomendada).",
+    },
+  ];
+
+  const [votes, setVotes] = useState({ playa: 0, valle: 0 });
+  const [total, setTotal] = useState(0);
+
+  useEffect(() => {
+    const saved = localStorage.getItem("votes");
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      setVotes(parsed);
+      setTotal(parsed.playa + parsed.valle);
+    }
+  }, []);
+
+  const handleVote = (type) => {
+    const updated = {
+      ...votes,
+      [type]: votes[type] + 1,
+    };
+    setVotes(updated);
+    setTotal(updated.playa + updated.valle);
+    localStorage.setItem("votes", JSON.stringify(updated));
+  };
+
+  return (
+    <div className="min-h-screen bg-zinc-950 text-zinc-50">
+      <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+        <header className="mb-10 overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-zinc-900 via-zinc-900 to-zinc-800 shadow-2xl">
+          <div className="grid gap-8 p-8 md:grid-cols-[1.4fr,0.8fr] md:p-10">
+            <div>
+              <p className="mb-3 inline-flex rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs uppercase tracking-[0.2em] text-zinc-300">
+                Semana Santa · Tijuana + Ensenada · 7 personas · 2 carros
+              </p>
+              <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
+                Votación del sábado en Ensenada
+              </h1>
+              <p className="mt-4 max-w-2xl text-base leading-7 text-zinc-300 sm:text-lg">
+                La idea es elegir un solo plan para el sábado 4 de abril. Aquí están las dos opciones con mood,
+                presupuesto, logística y horario para decidir rápido y sin tanta vuelta.
+              </p>
+              <div className="mt-6 flex flex-wrap gap-3 text-sm text-zinc-200">
+                <span className="rounded-full bg-cyan-500/15 px-3 py-1 ring-1 ring-cyan-400/30">Playa = budget + relax</span>
+                <span className="rounded-full bg-amber-500/15 px-3 py-1 ring-1 ring-amber-400/30">Valle = experiencia + gasto</span>
+                <span className="rounded-full bg-white/10 px-3 py-1 ring-1 ring-white/10">Elegir hoy ayuda a planear todo</span>
+              </div>
+            </div>
+            <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-1">
+              <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
+                <p className="text-sm text-zinc-400">Sábado</p>
+                <p className="mt-1 text-2xl font-semibold">4 de abril</p>
+                <p className="mt-3 text-sm text-zinc-300">Base en Ensenada después del show del viernes.</p>
+              </div>
+              <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
+                <p className="text-sm text-zinc-400">Meta</p>
+                <p className="mt-1 text-2xl font-semibold">Elegir 1 plan</p>
+                <p className="mt-3 text-sm text-zinc-300">Para ajustar presupuesto, horarios y conductores.</p>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <section className="grid gap-8 lg:grid-cols-2">
+          {options.map((option) => (
+            <article
+              key={option.id}
+              className="overflow-hidden rounded-3xl border border-white/10 bg-zinc-900/70 shadow-2xl backdrop-blur"
+            >
+              <div className="relative h-64 overflow-hidden">
+                <img src={option.image} alt={option.title} className="h-full w-full object-cover" />
+                <div className={`absolute inset-0 bg-gradient-to-t ${option.accent} opacity-60`} />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                <div className="absolute bottom-0 left-0 right-0 p-6">
+                  <p className="mb-2 text-4xl">{option.emoji}</p>
+                  <h2 className="text-3xl font-bold">{option.title}</h2>
+                  <p className="mt-2 text-zinc-100/90">{option.subtitle}</p>
+                </div>
+              </div>
+
+              <div className="space-y-6 p-6">
+                <div className="grid gap-4 sm:grid-cols-3">
+                  <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+                    <p className="text-xs uppercase tracking-wide text-zinc-400">Horario</p>
+                    <p className="mt-2 font-semibold">{option.time}</p>
+                  </div>
+                  <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+                    <p className="text-xs uppercase tracking-wide text-zinc-400">Lugar</p>
+                    <p className="mt-2 font-semibold">{option.location}</p>
+                  </div>
+                  <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+                    <p className="text-xs uppercase tracking-wide text-zinc-400">Costo aprox.</p>
+                    <p className="mt-2 font-semibold">{option.budget}</p>
+                  </div>
+                </div>
+
+                <div>
+                  <p className="mb-3 text-sm font-medium uppercase tracking-[0.18em] text-zinc-400">Mood visual</p>
+                  <div className="flex flex-wrap gap-2">
+                    {option.vibe.map((tag) => (
+                      <span key={tag} className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-sm text-zinc-200">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div className="rounded-2xl border border-emerald-400/20 bg-emerald-500/5 p-5">
+                    <h3 className="text-lg font-semibold text-emerald-300">Lo bueno</h3>
+                    <ul className="mt-3 space-y-2 text-sm leading-6 text-zinc-200">
+                      {option.pros.map((item) => (
+                        <li key={item}>• {item}</li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div className="rounded-2xl border border-rose-400/20 bg-rose-500/5 p-5">
+                    <h3 className="text-lg font-semibold text-rose-300">Ojo con esto</h3>
+                    <ul className="mt-3 space-y-2 text-sm leading-6 text-zinc-200">
+                      {option.cons.map((item) => (
+                        <li key={item}>• {item}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+
+                <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
+                  <h3 className="text-lg font-semibold">Plan del día</h3>
+                  <div className="mt-4 space-y-3">
+                    {option.plan.map((step, index) => (
+                      <div key={step} className="flex items-start gap-3">
+                        <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-white/10 text-sm font-semibold">
+                          {index + 1}
+                        </div>
+                        <p className="text-sm leading-6 text-zinc-200">{step}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="rounded-2xl border border-white/10 bg-gradient-to-r from-white/8 to-white/4 p-5">
+                  <p className="text-sm leading-6 text-zinc-200">{option.note}</p>
+                </div>
+              </div>
+            </article>
+          ))}
+        </section>
+
+        <section className="mt-10 rounded-3xl border border-white/10 bg-zinc-900/80 p-8 shadow-2xl">
+          <div className="grid gap-8 md:grid-cols-[1.1fr,0.9fr] md:items-center">
+            <div>
+              <p className="text-sm uppercase tracking-[0.2em] text-zinc-400">Votación</p>
+              <h2 className="mt-2 text-3xl font-bold">¿Qué plan prefieres?</h2>
+              <p className="mt-3 max-w-2xl text-zinc-300">
+                Pueden votar aquí mismo de forma rápida. Si después quieren, se puede convertir en formulario real o conectar a un Google Form.
+              </p>
+            </div>
+
+            <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
+              <div className="space-y-4">
+                <button
+                  type="button"
+                  onClick={() => {
+                    handleVote("playa");
+                    window.open("https://forms.gle/QKMvmoPeATf3XqSC8", "_blank");
+                  }}
+                  className="w-full rounded-2xl border border-cyan-400/30 bg-cyan-500/10 px-4 py-4 text-left transition hover:bg-cyan-500/20"
+                >
+                  <span className="block font-semibold text-lg">🌊 Votar Playa</span>
+                  <span className="text-sm text-zinc-300">Más barato, relax y sin complicaciones</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    handleVote("valle");
+                    window.open("https://forms.gle/QKMvmoPeATf3XqSC8", "_blank");
+                  }}
+                  className="w-full rounded-2xl border border-amber-400/30 bg-amber-500/10 px-4 py-4 text-left transition hover:bg-amber-500/20"
+                >
+                  <span className="block font-semibold text-lg">🍷 Votar Valle</span>
+                  <span className="text-sm text-zinc-300">Más experiencia, comida y vino</span>
+                </button>
+
+                <p className="text-center text-xs text-zinc-500">
+                  Los votos se registran en el formulario y aquí puedes ver un conteo en tiempo real (local).
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="mt-10 rounded-3xl border border-white/10 bg-zinc-900/80 p-8">
+          <h2 className="text-2xl font-bold mb-4">Resultados (demo en vivo)</h2>
+          <div className="space-y-4">
+            <div>
+              <div className="flex justify-between text-sm mb-1">
+                <span>🌊 Playa</span>
+                <span>{votes.playa} votos</span>
+              </div>
+              <div className="w-full bg-white/10 rounded-full h-3">
+                <div
+                  className="bg-cyan-500 h-3 rounded-full"
+                  style={{ width: total ? `${(votes.playa / total) * 100}%` : "0%" }}
+                />
+              </div>
+            </div>
+
+            <div>
+              <div className="flex justify-between text-sm mb-1">
+                <span>🍷 Valle</span>
+                <span>{votes.valle} votos</span>
+              </div>
+              <div className="w-full bg-white/10 rounded-full h-3">
+                <div
+                  className="bg-amber-500 h-3 rounded-full"
+                  style={{ width: total ? `${(votes.valle / total) * 100}%` : "0%" }}
+                />
+              </div>
+            </div>
+
+            <p className="text-xs text-zinc-400 mt-2">* Este conteo es local (demo). El resultado real está en Google Forms.</p>
+          </div>
+        </section>
+      </div>
+    </div>
+  );
+}
