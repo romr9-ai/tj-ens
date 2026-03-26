@@ -1,293 +1,912 @@
-import { useEffect, useState } from "react";
-
-export default function TourVotingSite() {
-  const options = [
-    {
-      id: "playa",
-      title: "Opción A · Día de Playa",
-      subtitle: "Low cost · cero estrés · mood relax",
-      emoji: "🌊",
-      time: "11:00 – 19:00",
-      location: "San Miguel / Playa Hermosa",
-      budget: "$100–300 por persona",
-      vibe: ["Chill", "Barato", "Fácil logística", "Ideal post-show"],
-      pros: [
-        "Menos gasto para todos",
-        "No requiere reservación",
-        "Perfecto para descansar después de tocar",
-        "Buen plan para llevar hielera, snacks y bocina",
-      ],
-      cons: [
-        "Puede haber mucha gente por Semana Santa",
-        "Menos especial que una salida al Valle",
-      ],
-      plan: [
-        "11:00 · Salida del hospedaje",
-        "11:30 · Llegada a playa",
-        "12:00–16:00 · Relax, cheves, snacks y fotos",
-        "17:00 · Regreso",
-        "19:00 · Cena ligera o descanso en casa",
-      ],
-      image:
-        "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80",
-      accent: "from-cyan-500 to-blue-600",
-      note: "La opción más práctica para cuidar energía y presupuesto.",
-    },
-    {
-      id: "valle",
-      title: "Opción B · Valle de Guadalupe",
-      subtitle: "Experiencia · comida rica · vibe memorable",
-      emoji: "🍷",
-      time: "11:00 – 20:00",
-      location: "Finca Altozano / Bar Bura / Deckman’s",
-      budget: "$500–1200 por persona",
-      vibe: ["Más premium", "Fotos chidas", "Comida + vino", "Plan de viaje"],
-      pros: [
-        "Se siente más como mini-vacación",
-        "Muy buena experiencia para grupo y parejas",
-        "Excelente para fotos y pasarla cool",
-        "Plan más memorable que solo quedarse en la ciudad",
-      ],
-      cons: [
-        "Más caro",
-        "Necesita conductor designado",
-        "Puede requerir reserva o paciencia por fechas",
-      ],
-      plan: [
-        "11:00 · Salida del hospedaje",
-        "12:00 · Llegada al Valle",
-        "12:30–17:00 · Comida + vino (Finca Altozano ≈ $400–700, Bar Bura ≈ $700–1200)",
-        "18:30 · Regreso a Ensenada",
-        "20:00 · Noche chill en casa",
-      ],
-      image:
-        "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?auto=format&fit=crop&w=1200&q=80",
-      accent: "from-amber-500 to-rose-600",
-      note: "Ejemplos reales: Finca Altozano (asador campestre), Bar Bura en Cuatro Cuatros (mínimo ≈ $700–1000 por persona), Deckman’s (experiencia similar, con reserva recomendada).",
-    },
-  ];
-
-  const [votes, setVotes] = useState({ playa: 0, valle: 0 });
-  const [total, setTotal] = useState(0);
-
-  useEffect(() => {
-    const saved = localStorage.getItem("votes");
-    if (saved) {
-      const parsed = JSON.parse(saved);
-      setVotes(parsed);
-      setTotal(parsed.playa + parsed.valle);
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Votación del sábado en Ensenada</title>
+  <style>
+    :root {
+      --bg: #09090b;
+      --panel: #111318;
+      --panel-2: #18181b;
+      --panel-3: #27272a;
+      --text: #f4f4f5;
+      --muted: #a1a1aa;
+      --muted-2: #d4d4d8;
+      --border: rgba(255,255,255,0.08);
+      --cyan: #06b6d4;
+      --cyan-soft: rgba(6,182,212,0.12);
+      --amber: #f59e0b;
+      --amber-soft: rgba(245,158,11,0.12);
+      --green: #10b981;
+      --green-soft: rgba(16,185,129,0.10);
+      --rose: #f43f5e;
+      --rose-soft: rgba(244,63,94,0.10);
+      --shadow: 0 20px 50px rgba(0,0,0,0.35);
+      --radius: 24px;
+      --radius-sm: 16px;
     }
-  }, []);
 
-  const handleVote = (type) => {
-    const updated = {
-      ...votes,
-      [type]: votes[type] + 1,
-    };
-    setVotes(updated);
-    setTotal(updated.playa + updated.valle);
-    localStorage.setItem("votes", JSON.stringify(updated));
-  };
+    * {
+      box-sizing: border-box;
+    }
 
-  return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-50">
-      <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-        <header className="mb-10 overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-zinc-900 via-zinc-900 to-zinc-800 shadow-2xl">
-          <div className="grid gap-8 p-8 md:grid-cols-[1.4fr,0.8fr] md:p-10">
-            <div>
-              <p className="mb-3 inline-flex rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs uppercase tracking-[0.2em] text-zinc-300">
-                Semana Santa · Tijuana + Ensenada · 7 personas · 2 carros
-              </p>
-              <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
-                Votación del sábado en Ensenada
-              </h1>
-              <p className="mt-4 max-w-2xl text-base leading-7 text-zinc-300 sm:text-lg">
-                La idea es elegir un solo plan para el sábado 4 de abril. Aquí están las dos opciones con mood,
-                presupuesto, logística y horario para decidir rápido y sin tanta vuelta.
-              </p>
-              <div className="mt-6 flex flex-wrap gap-3 text-sm text-zinc-200">
-                <span className="rounded-full bg-cyan-500/15 px-3 py-1 ring-1 ring-cyan-400/30">Playa = budget + relax</span>
-                <span className="rounded-full bg-amber-500/15 px-3 py-1 ring-1 ring-amber-400/30">Valle = experiencia + gasto</span>
-                <span className="rounded-full bg-white/10 px-3 py-1 ring-1 ring-white/10">Elegir hoy ayuda a planear todo</span>
-              </div>
-            </div>
-            <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-1">
-              <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
-                <p className="text-sm text-zinc-400">Sábado</p>
-                <p className="mt-1 text-2xl font-semibold">4 de abril</p>
-                <p className="mt-3 text-sm text-zinc-300">Base en Ensenada después del show del viernes.</p>
-              </div>
-              <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
-                <p className="text-sm text-zinc-400">Meta</p>
-                <p className="mt-1 text-2xl font-semibold">Elegir 1 plan</p>
-                <p className="mt-3 text-sm text-zinc-300">Para ajustar presupuesto, horarios y conductores.</p>
-              </div>
-            </div>
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(circle at top, rgba(30,41,59,0.22), transparent 30%),
+        linear-gradient(180deg, #050608 0%, var(--bg) 100%);
+      color: var(--text);
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    .container {
+      width: min(1280px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 28px 0 48px;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #13151d 0%, #15151b 55%, #101214 100%);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      box-shadow: var(--shadow);
+      margin-bottom: 28px;
+    }
+
+    .hero-grid {
+      display: grid;
+      gap: 20px;
+      align-items: start;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      padding: 8px 12px;
+      border-radius: 999px;
+      color: var(--muted-2);
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      margin-bottom: 16px;
+    }
+
+    h1 {
+      margin: 0 0 12px;
+      font-size: clamp(2rem, 5vw, 3.4rem);
+      line-height: 1.05;
+    }
+
+    .hero p.main-copy {
+      margin: 0;
+      max-width: 780px;
+      color: var(--muted-2);
+      line-height: 1.6;
+      font-size: 1rem;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-size: 14px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.05);
+      color: var(--text);
+    }
+
+    .chip.playa {
+      background: var(--cyan-soft);
+      border-color: rgba(6,182,212,0.25);
+    }
+
+    .chip.valle {
+      background: var(--amber-soft);
+      border-color: rgba(245,158,11,0.25);
+    }
+
+    .meta-cards {
+      display: grid;
+      gap: 14px;
+    }
+
+    .meta-card {
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.04);
+      border-radius: 20px;
+      padding: 18px;
+    }
+
+    .meta-card .label {
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+
+    .meta-card .value {
+      font-size: 1.55rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .meta-card p {
+      margin: 0;
+      color: var(--muted-2);
+      line-height: 1.5;
+      font-size: 14px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .option-card {
+      background: rgba(17,19,24,0.92);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      min-width: 0;
+    }
+
+    .option-media {
+      position: relative;
+      height: 250px;
+      overflow: hidden;
+    }
+
+    .option-media img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transform: scale(1.01);
+    }
+
+    .overlay-playa,
+    .overlay-valle {
+      position: absolute;
+      inset: 0;
+      opacity: 0.55;
+    }
+
+    .overlay-playa {
+      background: linear-gradient(to top, rgba(2,6,23,0.95), rgba(6,182,212,0.25), rgba(0,0,0,0.05));
+    }
+
+    .overlay-valle {
+      background: linear-gradient(to top, rgba(2,6,23,0.95), rgba(245,158,11,0.22), rgba(0,0,0,0.05));
+    }
+
+    .overlay-dark {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0.08) 60%, transparent);
+    }
+
+    .media-content {
+      position: absolute;
+      left: 24px;
+      right: 24px;
+      bottom: 20px;
+      z-index: 2;
+    }
+
+    .emoji {
+      font-size: 2.2rem;
+      margin-bottom: 8px;
+    }
+
+    .option-title {
+      margin: 0;
+      font-size: clamp(1.7rem, 3vw, 2.2rem);
+    }
+
+    .option-subtitle {
+      margin: 8px 0 0;
+      color: rgba(255,255,255,0.92);
+      line-height: 1.45;
+    }
+
+    .option-body {
+      padding: 22px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .stat {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 14px;
+    }
+
+    .stat .stat-label {
+      color: var(--muted);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+    }
+
+    .stat .stat-value {
+      font-weight: 700;
+      line-height: 1.35;
+    }
+
+    .section-label {
+      color: var(--muted);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .tag {
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 13px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.04);
+      color: var(--text);
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .panel {
+      border-radius: 18px;
+      padding: 18px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.04);
+    }
+
+    .panel.good {
+      background: var(--green-soft);
+      border-color: rgba(16,185,129,0.2);
+    }
+
+    .panel.caution {
+      background: var(--rose-soft);
+      border-color: rgba(244,63,94,0.2);
+    }
+
+    .panel h3,
+    .timeline h3,
+    .note h3 {
+      margin: 0 0 12px;
+      font-size: 1.1rem;
+    }
+
+    .panel ul,
+    .note ul {
+      margin: 0;
+      padding-left: 18px;
+      line-height: 1.65;
+      color: var(--muted-2);
+    }
+
+    .timeline {
+      border-radius: 18px;
+      padding: 18px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.04);
+      margin-bottom: 18px;
+    }
+
+    .steps {
+      display: grid;
+      gap: 12px;
+    }
+
+    .step {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .step-num {
+      width: 30px;
+      height: 30px;
+      flex: 0 0 30px;
+      border-radius: 999px;
+      display: grid;
+      place-items: center;
+      background: rgba(255,255,255,0.08);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .step p {
+      margin: 3px 0 0;
+      color: var(--muted-2);
+      line-height: 1.55;
+    }
+
+    .note {
+      border-radius: 18px;
+      padding: 18px;
+      border: 1px solid var(--border);
+      background: linear-gradient(90deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
+    }
+
+    .note p {
+      margin: 0;
+      color: var(--muted-2);
+      line-height: 1.6;
+    }
+
+    .vote-wrap {
+      margin-top: 28px;
+      background: rgba(17,19,24,0.92);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 24px;
+    }
+
+    .vote-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .vote-intro small {
+      display: inline-block;
+      color: var(--muted);
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .vote-intro h2 {
+      margin: 0 0 10px;
+      font-size: clamp(1.6rem, 4vw, 2.2rem);
+    }
+
+    .vote-intro p {
+      margin: 0;
+      color: var(--muted-2);
+      line-height: 1.65;
+    }
+
+    .vote-box {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 18px;
+    }
+
+    .vote-option {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      width: 100%;
+      border-radius: 18px;
+      padding: 16px;
+      margin-bottom: 12px;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      transition: transform .15s ease, border-color .15s ease, background .15s ease;
+    }
+
+    .vote-option:hover {
+      transform: translateY(-1px);
+    }
+
+    .vote-option.playa {
+      background: var(--cyan-soft);
+      border-color: rgba(6,182,212,0.28);
+    }
+
+    .vote-option.valle {
+      background: var(--amber-soft);
+      border-color: rgba(245,158,11,0.28);
+    }
+
+    .vote-option input {
+      margin-top: 2px;
+      accent-color: #ffffff;
+    }
+
+    .vote-option strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .vote-option span.sub {
+      color: var(--muted-2);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .field {
+      margin-top: 12px;
+    }
+
+    .field label {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--muted-2);
+      font-size: 14px;
+    }
+
+    .field input,
+    .field textarea {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      background: #0b0c10;
+      color: var(--text);
+      padding: 14px 16px;
+      font: inherit;
+      resize: vertical;
+      outline: none;
+    }
+
+    .field input:focus,
+    .field textarea:focus {
+      border-color: rgba(255,255,255,0.18);
+    }
+
+    .submit-btn {
+      width: 100%;
+      margin-top: 14px;
+      border: none;
+      border-radius: 16px;
+      background: #ffffff;
+      color: #0b0c10;
+      font-weight: 700;
+      padding: 15px 18px;
+      cursor: pointer;
+      font-size: 15px;
+      transition: transform .15s ease, opacity .15s ease;
+    }
+
+    .submit-btn:hover {
+      transform: translateY(-1px);
+      opacity: 0.96;
+    }
+
+    .tiny {
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.5;
+      margin-top: 12px;
+    }
+
+    .status {
+      margin-top: 12px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      font-size: 14px;
+      line-height: 1.5;
+      display: none;
+    }
+
+    .status.ok {
+      display: block;
+      background: rgba(16,185,129,0.12);
+      border: 1px solid rgba(16,185,129,0.22);
+      color: #d1fae5;
+    }
+
+    .status.warn {
+      display: block;
+      background: rgba(245,158,11,0.12);
+      border: 1px solid rgba(245,158,11,0.22);
+      color: #fde68a;
+    }
+
+    @media (min-width: 760px) {
+      .stats {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .two-col {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .hero-grid {
+        grid-template-columns: 1.35fr 0.85fr;
+      }
+
+      .vote-grid {
+        grid-template-columns: 1.1fr 0.9fr;
+      }
+    }
+
+    @media (min-width: 980px) {
+      .cards {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .container {
+        width: min(100% - 20px, 1280px);
+        padding: 18px 0 36px;
+      }
+
+      .hero,
+      .option-body,
+      .vote-wrap {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+
+      .hero {
+        padding-top: 22px;
+        padding-bottom: 22px;
+      }
+
+      .option-media {
+        height: 220px;
+      }
+
+      .media-content {
+        left: 18px;
+        right: 18px;
+        bottom: 16px;
+      }
+
+      .stat,
+      .panel,
+      .timeline,
+      .note,
+      .meta-card {
+        border-radius: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="hero">
+      <div class="hero-grid">
+        <div>
+          <div class="eyebrow">Semana Santa · Tijuana + Ensenada · 7 personas · 2 carros</div>
+          <h1>Votación del sábado en Ensenada</h1>
+          <p class="main-copy">
+            La idea es elegir un solo plan para el sábado 4 de abril. Aquí están las dos opciones con mood,
+            presupuesto, logística y horario para decidir rápido y sin tanta vuelta.
+          </p>
+          <div class="chips">
+            <span class="chip playa">Playa = budget + relax</span>
+            <span class="chip valle">Valle = experiencia + gasto</span>
+            <span class="chip">Elegir hoy ayuda a planear todo</span>
           </div>
-        </header>
+        </div>
 
-        <section className="grid gap-8 lg:grid-cols-2">
-          {options.map((option) => (
-            <article
-              key={option.id}
-              className="overflow-hidden rounded-3xl border border-white/10 bg-zinc-900/70 shadow-2xl backdrop-blur"
-            >
-              <div className="relative h-64 overflow-hidden">
-                <img src={option.image} alt={option.title} className="h-full w-full object-cover" />
-                <div className={`absolute inset-0 bg-gradient-to-t ${option.accent} opacity-60`} />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                <div className="absolute bottom-0 left-0 right-0 p-6">
-                  <p className="mb-2 text-4xl">{option.emoji}</p>
-                  <h2 className="text-3xl font-bold">{option.title}</h2>
-                  <p className="mt-2 text-zinc-100/90">{option.subtitle}</p>
-                </div>
-              </div>
-
-              <div className="space-y-6 p-6">
-                <div className="grid gap-4 sm:grid-cols-3">
-                  <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                    <p className="text-xs uppercase tracking-wide text-zinc-400">Horario</p>
-                    <p className="mt-2 font-semibold">{option.time}</p>
-                  </div>
-                  <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                    <p className="text-xs uppercase tracking-wide text-zinc-400">Lugar</p>
-                    <p className="mt-2 font-semibold">{option.location}</p>
-                  </div>
-                  <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                    <p className="text-xs uppercase tracking-wide text-zinc-400">Costo aprox.</p>
-                    <p className="mt-2 font-semibold">{option.budget}</p>
-                  </div>
-                </div>
-
-                <div>
-                  <p className="mb-3 text-sm font-medium uppercase tracking-[0.18em] text-zinc-400">Mood visual</p>
-                  <div className="flex flex-wrap gap-2">
-                    {option.vibe.map((tag) => (
-                      <span key={tag} className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-sm text-zinc-200">
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="grid gap-4 md:grid-cols-2">
-                  <div className="rounded-2xl border border-emerald-400/20 bg-emerald-500/5 p-5">
-                    <h3 className="text-lg font-semibold text-emerald-300">Lo bueno</h3>
-                    <ul className="mt-3 space-y-2 text-sm leading-6 text-zinc-200">
-                      {option.pros.map((item) => (
-                        <li key={item}>• {item}</li>
-                      ))}
-                    </ul>
-                  </div>
-                  <div className="rounded-2xl border border-rose-400/20 bg-rose-500/5 p-5">
-                    <h3 className="text-lg font-semibold text-rose-300">Ojo con esto</h3>
-                    <ul className="mt-3 space-y-2 text-sm leading-6 text-zinc-200">
-                      {option.cons.map((item) => (
-                        <li key={item}>• {item}</li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-
-                <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
-                  <h3 className="text-lg font-semibold">Plan del día</h3>
-                  <div className="mt-4 space-y-3">
-                    {option.plan.map((step, index) => (
-                      <div key={step} className="flex items-start gap-3">
-                        <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-white/10 text-sm font-semibold">
-                          {index + 1}
-                        </div>
-                        <p className="text-sm leading-6 text-zinc-200">{step}</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="rounded-2xl border border-white/10 bg-gradient-to-r from-white/8 to-white/4 p-5">
-                  <p className="text-sm leading-6 text-zinc-200">{option.note}</p>
-                </div>
-              </div>
-            </article>
-          ))}
-        </section>
-
-        <section className="mt-10 rounded-3xl border border-white/10 bg-zinc-900/80 p-8 shadow-2xl">
-          <div className="grid gap-8 md:grid-cols-[1.1fr,0.9fr] md:items-center">
-            <div>
-              <p className="text-sm uppercase tracking-[0.2em] text-zinc-400">Votación</p>
-              <h2 className="mt-2 text-3xl font-bold">¿Qué plan prefieres?</h2>
-              <p className="mt-3 max-w-2xl text-zinc-300">
-                Pueden votar aquí mismo de forma rápida. Si después quieren, se puede convertir en formulario real o conectar a un Google Form.
-              </p>
-            </div>
-
-            <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
-              <div className="space-y-4">
-                <button
-                  type="button"
-                  onClick={() => {
-                    handleVote("playa");
-                    window.open("https://forms.gle/QKMvmoPeATf3XqSC8", "_blank");
-                  }}
-                  className="w-full rounded-2xl border border-cyan-400/30 bg-cyan-500/10 px-4 py-4 text-left transition hover:bg-cyan-500/20"
-                >
-                  <span className="block font-semibold text-lg">🌊 Votar Playa</span>
-                  <span className="text-sm text-zinc-300">Más barato, relax y sin complicaciones</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => {
-                    handleVote("valle");
-                    window.open("https://forms.gle/QKMvmoPeATf3XqSC8", "_blank");
-                  }}
-                  className="w-full rounded-2xl border border-amber-400/30 bg-amber-500/10 px-4 py-4 text-left transition hover:bg-amber-500/20"
-                >
-                  <span className="block font-semibold text-lg">🍷 Votar Valle</span>
-                  <span className="text-sm text-zinc-300">Más experiencia, comida y vino</span>
-                </button>
-
-                <p className="text-center text-xs text-zinc-500">
-                  Los votos se registran en el formulario y aquí puedes ver un conteo en tiempo real (local).
-                </p>
-              </div>
-            </div>
+        <div class="meta-cards">
+          <div class="meta-card">
+            <div class="label">Sábado</div>
+            <div class="value">4 de abril</div>
+            <p>Base en Ensenada después del show del viernes.</p>
           </div>
-        </section>
-
-        <section className="mt-10 rounded-3xl border border-white/10 bg-zinc-900/80 p-8">
-          <h2 className="text-2xl font-bold mb-4">Resultados (demo en vivo)</h2>
-          <div className="space-y-4">
-            <div>
-              <div className="flex justify-between text-sm mb-1">
-                <span>🌊 Playa</span>
-                <span>{votes.playa} votos</span>
-              </div>
-              <div className="w-full bg-white/10 rounded-full h-3">
-                <div
-                  className="bg-cyan-500 h-3 rounded-full"
-                  style={{ width: total ? `${(votes.playa / total) * 100}%` : "0%" }}
-                />
-              </div>
-            </div>
-
-            <div>
-              <div className="flex justify-between text-sm mb-1">
-                <span>🍷 Valle</span>
-                <span>{votes.valle} votos</span>
-              </div>
-              <div className="w-full bg-white/10 rounded-full h-3">
-                <div
-                  className="bg-amber-500 h-3 rounded-full"
-                  style={{ width: total ? `${(votes.valle / total) * 100}%` : "0%" }}
-                />
-              </div>
-            </div>
-
-            <p className="text-xs text-zinc-400 mt-2">* Este conteo es local (demo). El resultado real está en Google Forms.</p>
+          <div class="meta-card">
+            <div class="label">Meta</div>
+            <div class="value">Elegir 1 plan</div>
+            <p>Para ajustar presupuesto, horarios y conductores.</p>
           </div>
-        </section>
+        </div>
       </div>
-    </div>
-  );
-}
+    </header>
+
+    <section class="cards">
+      <!-- PLAYA -->
+      <article class="option-card">
+        <div class="option-media">
+          <img
+            src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80"
+            alt="Playa"
+          />
+          <div class="overlay-playa"></div>
+          <div class="overlay-dark"></div>
+          <div class="media-content">
+            <div class="emoji">🌊</div>
+            <h2 class="option-title">Opción A · Día de Playa</h2>
+            <p class="option-subtitle">Low cost · cero estrés · mood relax</p>
+          </div>
+        </div>
+
+        <div class="option-body">
+          <div class="stats">
+            <div class="stat">
+              <div class="stat-label">Horario</div>
+              <div class="stat-value">11:00 – 19:00</div>
+            </div>
+            <div class="stat">
+              <div class="stat-label">Lugar</div>
+              <div class="stat-value">San Miguel / Playa Hermosa</div>
+            </div>
+            <div class="stat">
+              <div class="stat-label">Costo aprox.</div>
+              <div class="stat-value">$100–300 por persona</div>
+            </div>
+          </div>
+
+          <span class="section-label">Mood visual</span>
+          <div class="tags">
+            <span class="tag">Chill</span>
+            <span class="tag">Barato</span>
+            <span class="tag">Fácil logística</span>
+            <span class="tag">Ideal post-show</span>
+          </div>
+
+          <div class="two-col">
+            <div class="panel good">
+              <h3>Lo bueno</h3>
+              <ul>
+                <li>Menos gasto para todos.</li>
+                <li>No requiere reservación.</li>
+                <li>Perfecto para descansar después de tocar.</li>
+                <li>Buen plan para llevar hielera, snacks y bocina.</li>
+              </ul>
+            </div>
+
+            <div class="panel caution">
+              <h3>Ojo con esto</h3>
+              <ul>
+                <li>Puede haber mucha gente por Semana Santa.</li>
+                <li>Menos especial que una salida al Valle.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="timeline">
+            <h3>Plan del día</h3>
+            <div class="steps">
+              <div class="step">
+                <div class="step-num">1</div>
+                <p>11:00 · Salida del hospedaje.</p>
+              </div>
+              <div class="step">
+                <div class="step-num">2</div>
+                <p>11:30 · Llegada a playa.</p>
+              </div>
+              <div class="step">
+                <div class="step-num">3</div>
+                <p>12:00–16:00 · Relax, cheves, snacks y fotos.</p>
+              </div>
+              <div class="step">
+                <div class="step-num">4</div>
+                <p>17:00 · Regreso.</p>
+              </div>
+              <div class="step">
+                <div class="step-num">5</div>
+                <p>19:00 · Cena ligera o descanso en casa.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="note">
+            <p>La opción más práctica para cuidar energía y presupuesto.</p>
+          </div>
+        </div>
+      </article>
+
+      <!-- VALLE -->
+      <article class="option-card">
+        <div class="option-media">
+          <img
+            src="https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?auto=format&fit=crop&w=1200&q=80"
+            alt="Valle de Guadalupe"
+          />
+          <div class="overlay-valle"></div>
+          <div class="overlay-dark"></div>
+          <div class="media-content">
+            <div class="emoji">🍷</div>
+            <h2 class="option-title">Opción B · Valle de Guadalupe</h2>
+            <p class="option-subtitle">Experiencia · comida rica · vibe memorable</p>
+          </div>
+        </div>
+
+        <div class="option-body">
+          <div class="stats">
+            <div class="stat">
+              <div class="stat-label">Horario</div>
+              <div class="stat-value">11:00 – 20:00</div>
+            </div>
+            <div class="stat">
+              <div class="stat-label">Lugar</div>
+              <div class="stat-value">Finca Altozano / Bar Bura / Deckman’s</div>
+            </div>
+            <div class="stat">
+              <div class="stat-label">Costo aprox.</div>
+              <div class="stat-value">$500–1200 por persona</div>
+            </div>
+          </div>
+
+          <span class="section-label">Mood visual</span>
+          <div class="tags">
+            <span class="tag">Más premium</span>
+            <span class="tag">Fotos chidas</span>
+            <span class="tag">Comida + vino</span>
+            <span class="tag">Plan de viaje</span>
+          </div>
+
+          <div class="two-col">
+            <div class="panel good">
+              <h3>Lo bueno</h3>
+              <ul>
+                <li>Se siente más como mini-vacación.</li>
+                <li>Muy buena experiencia para grupo y parejas.</li>
+                <li>Excelente para fotos y pasarla cool.</li>
+                <li>Plan más memorable que solo quedarse en la ciudad.</li>
+              </ul>
+            </div>
+
+            <div class="panel caution">
+              <h3>Ojo con esto</h3>
+              <ul>
+                <li>Más caro.</li>
+                <li>Necesita conductor designado.</li>
+                <li>Puede requerir reserva o paciencia por fechas.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="timeline">
+            <h3>Plan del día</h3>
+            <div class="steps">
+              <div class="step">
+                <div class="step-num">1</div>
+                <p>11:00 · Salida del hospedaje.</p>
+              </div>
+              <div class="step">
+                <div class="step-num">2</div>
+                <p>12:00 · Llegada al Valle.</p>
+              </div>
+              <div class="step">
+                <div class="step-num">3</div>
+                <p>12:30–17:00 · Comida + vino (Finca Altozano ≈ $400–700, Bar Bura ≈ $700–1200).</p>
+              </div>
+              <div class="step">
+                <div class="step-num">4</div>
+                <p>18:30 · Regreso a Ensenada.</p>
+              </div>
+              <div class="step">
+                <div class="step-num">5</div>
+                <p>20:00 · Noche chill en casa.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="note">
+            <p>
+              Ejemplos reales: Finca Altozano (asador campestre), Bar Bura en Cuatro Cuatros
+              (mínimo ≈ $700–1000 por persona), Deckman’s (experiencia similar, con reserva recomendada).
+            </p>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section class="vote-wrap">
+      <div class="vote-grid">
+        <div class="vote-intro">
+          <small>Votación</small>
+          <h2>¿Qué plan prefieres?</h2>
+          <p>
+            Pueden votar aquí mismo de forma rápida. El botón abre el formulario real para registrar la respuesta.
+            Nombre y comentario son opcionales y solo te sirven como apoyo visual antes de enviar.
+          </p>
+        </div>
+
+        <div class="vote-box">
+          <label class="vote-option playa">
+            <input type="radio" name="plan" value="playa" />
+            <span>
+              <strong>🌊 Opción A · Playa</strong>
+              <span class="sub">Más barato, fácil y relax.</span>
+            </span>
+          </label>
+
+          <label class="vote-option valle">
+            <input type="radio" name="plan" value="valle" />
+            <span>
+              <strong>🍷 Opción B · Valle de Guadalupe</strong>
+              <span class="sub">Más memorable, más gasto.</span>
+            </span>
+          </label>
+
+          <div class="field">
+            <label for="nombre">Nombre (opcional)</label>
+            <input id="nombre" type="text" placeholder="Tu nombre" />
+          </div>
+
+          <div class="field">
+            <label for="comentario">Comentario (opcional)</label>
+            <textarea
+              id="comentario"
+              rows="4"
+              placeholder="Ej. yo jalo playa pero también jalo valle si apartamos presupuesto"
+            ></textarea>
+          </div>
+
+          <button class="submit-btn" id="submitBtn" type="button">Votar en formulario</button>
+
+          <div class="tiny">
+            El registro real de votos se hace en Google Forms.
+          </div>
+
+          <div id="status" class="status"></div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const FORM_URL = "https://forms.gle/QKMvmoPeATf3XqSC8";
+    const submitBtn = document.getElementById("submitBtn");
+    const statusBox = document.getElementById("status");
+
+    submitBtn.addEventListener("click", function () {
+      const selected = document.querySelector('input[name="plan"]:checked');
+      const nombre = document.getElementById("nombre").value.trim();
+      const comentario = document.getElementById("comentario").value.trim();
+
+      if (!selected) {
+        statusBox.className = "status warn";
+        statusBox.textContent = "Selecciona Playa o Valle antes de continuar.";
+        return;
+      }
+
+      const plan = selected.value === "playa" ? "Playa" : "Valle de Guadalupe";
+
+      statusBox.className = "status ok";
+      statusBox.textContent =
+        "Elegiste: " + plan +
+        (nombre ? " · Nombre: " + nombre : "") +
+        (comentario ? " · Comentario listo." : "") +
+        " Ahora se abrirá el formulario para registrar el voto real.";
+
+      window.open(FORM_URL, "_blank");
+    });
+  </script>
+</body>
+</html>
