@@ -300,44 +300,89 @@ Elegir 1 plan
 </div>
 
 <!-- VOTACION -->
+
+
+
+
 <div class="vote">
 
 <h2>Votar</h2>
 
-<label><input type="radio" name="plan"> Playa</label><br>
-<label><input type="radio" name="plan"> Valle</label><br>
-<label><input type="radio" name="plan"> Híbrido</label><br><br>
+<button onclick="vote('Playa')">🌊 Playa</button>
+<button onclick="vote('Valle')">🍷 Valle</button>
+<button onclick="vote('Hibrido')">☀️ Híbrido</button>
 
-<button type="button" onclick="vote()">Abrir votación</button>
+<div id="results" style="margin-top:20px;"></div>
 
-</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
-function vote(){
-  const selected = document.querySelector('input[name="plan"]:checked');
+const supabaseClient = window.supabase.createClient(
+  "https://vliioeiznqqyrkboyghl.supabase.co",
+  "sb_publishable_XhjDvpRA3vlh4ZU5580yjw_LjQdZlEb"
+);
 
-  if(!selected){
-    alert("Selecciona una opción");
+async function vote(option){
+
+  if(localStorage.getItem("voted")){
+    alert("Ya votaste 👀");
     return;
   }
 
-  const value = selected.value;
+  const { error } = await supabaseClient
+    .from('votes')
+    .insert([{ option }]);
 
-  const formURL = "https://docs.google.com/forms/d/e/1FAIpQLSeIfYVOrzFK5nR8CbXquLAXak8akZAhsB72-KHNNXanV0SgCQ/formResponse";
+  if(error){
+    alert("Error al votar ❌");
+    console.error(error);
+    return;
+  }
 
-  const formData = new FormData();
-  formData.append("entry.335983647", value);
-
-  fetch(formURL, {
-    method: "POST",
-    mode: "no-cors",
-    body: formData
-  });
+  localStorage.setItem("voted", "true");
 
   alert("Voto enviado ✅");
+
+  loadResults();
 }
+
+async function loadResults(){
+  const { data, error } = await supabaseClient
+    .from('votes')
+    .select('option');
+
+  if(error){
+    console.error(error);
+    return;
+  }
+
+  const counts = { Playa: 0, Valle: 0, Hibrido: 0 };
+
+  data.forEach(v => {
+    if(counts[v.option] !== undefined){
+      counts[v.option]++;
+    }
+  });
+
+  const total = counts.Playa + counts.Valle + counts.Hibrido;
+
+  function pct(n){
+    return total ? Math.round((n/total)*100) : 0;
+  }
+
+  document.getElementById("results").innerHTML = `
+    <strong>Resultados:</strong><br><br>
+    🌊 Playa: ${counts.Playa} (${pct(counts.Playa)}%)<br>
+    🍷 Valle: ${counts.Valle} (${pct(counts.Valle)}%)<br>
+    ☀️ Híbrido: ${counts.Hibrido} (${pct(counts.Hibrido)}%)<br><br>
+    Total: ${total}
+  `;
+}
+
+setInterval(loadResults, 5000);
+loadResults();
 </script>
 
 </body>
