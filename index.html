@@ -325,19 +325,18 @@ function vote(){
 
   const value = selected.value;
 
-  let url = "";
+  const formURL = "https://docs.google.com/forms/d/e/1FAIpQLSeIfYVOrzFK5nR8CbXquLAXak8akZAhsB72-KHNNXanV0SgCQ/formResponse";
 
-  if(value === "playa"){
-    url = "LINK_PREFILL_PLAYA";
-  }
-  if(value === "valle"){
-    url = "LINK_PREFILL_VALLE";
-  }
-  if(value === "hibrido"){
-    url = "LINK_PREFILL_HIBRIDO";
-  }
+  const formData = new FormData();
+  formData.append("entry.335983647", value);
 
-  window.open(url, "_blank");
+  fetch(formURL, {
+    method: "POST",
+    mode: "no-cors",
+    body: formData
+  });
+
+  alert("Voto enviado ✅");
 }
 </script>
 
