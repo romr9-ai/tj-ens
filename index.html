@@ -316,7 +316,28 @@ Elegir 1 plan
 
 <script>
 function vote(){
-  window.open("https://forms.gle/QKMvmoPeATf3XqSC8");
+  const selected = document.querySelector('input[name="plan"]:checked');
+
+  if(!selected){
+    alert("Selecciona una opción");
+    return;
+  }
+
+  const value = selected.value;
+
+  let url = "";
+
+  if(value === "playa"){
+    url = "LINK_PREFILL_PLAYA";
+  }
+  if(value === "valle"){
+    url = "LINK_PREFILL_VALLE";
+  }
+  if(value === "hibrido"){
+    url = "LINK_PREFILL_HIBRIDO";
+  }
+
+  window.open(url, "_blank");
 }
 </script>
 
